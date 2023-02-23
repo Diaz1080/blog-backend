@@ -18,7 +18,7 @@ server.use(
 );
 
 server.get("/", (req, res) => {
-	res.send(my_name_is: "Alba");
+	res.send({my_name_is: "Alba"});
 });
 
 server.post("/newPost", async (req, res) => {
