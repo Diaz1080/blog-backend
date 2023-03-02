@@ -26,7 +26,7 @@ const connectToDB = async () => {
 		await db.authenticate();
 		console.log("Connected to DB successfully");
 
-		db.sync();
+		await db.sync();
 	} catch (error) {
 		console.error(error);
 		console.error("PANIC! DB POBLEM!");
