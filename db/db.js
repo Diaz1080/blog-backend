@@ -33,7 +33,44 @@ const connectToDB = async () => {
 	}
 	Post.belongsTo(User, { foreignKey: "userID" });
 };
+const createFirstUser = async () => {
+	const users = await User.findAll({});
+	if (users.length === 0) {
+		User.create({
+			email: "max",
+			password: bcrypt.hashSync("supersecret", 10),
+		});
+	}
+};
 
-connectToDB();
+const createSecondUser = async () => {
+	const secondUser = await User.findOne({
+		where: { email: "testymctesterson" },
+	});
+	if (!secondUser) {
+		User.create({
+			email: "testymctesterson",
+			password: bcrypt.hashSync("secret", 10),
+		});
+	}
+};
+const serverStarted = async () => {
+	const user = await User.findOne({ where: { email: "nydia1080@yahoo.com" } });
+	if (!user) {
+		await User.create({
+			email: "nydia1080@yahoo.com",
+			firstName: "Alba",
+			password: bcrypt.hashSync("qwerty", 10),
+		});
+	}
+};
 
-export { db, Post, User };
+// 1. connect and standup our tables
+connectToDB().then(() => {
+	// 2. and then create models
+	createFirstUser();
+	createSecondUser();
+	serverStarted();
+});
+
+module.exports = { db, User, Post }; 

@@ -6,7 +6,7 @@ import sessions from "express-session";
 import connectSession from "connect-session-sequelize";
 
 const server = express();
-server.use(cors({ credentials: true, origin: ["http://localhost:3000"] }));
+server.use(cors({ credentials: true, origin: ["http://localhost:3000", "https://syracuse-food-pantry-easy-search.org", "https://www.syracuse-food-pantry-easy-search.org"] }));
 server.use(express.json());
 const sequelizeStore = connectSession(sessions.Store);
 server.use(
@@ -92,20 +92,17 @@ server.get("/authStatus", async (req, res) => {
 	}
 });
 
-const serverStarted = async () => {
-	const user = await User.findOne({ where: { email: "nydia1080@yahoo.com" } });
-	if (!user) {
-		await User.create({
-			email: "nydia1080@yahoo.com",
-			firstName: "Alba",
-			password: bcrypt.hashSync("qwerty", 10),
-		});
-	}
-};
-serverStarted();
 
-server.listen(3001, () => {
-	console.log("Server running on port 3001");
+
+// bind to the correct port that AWS assigns us
+let port = 3001; 
+if (process.env.PORT) {
+	port = process.env.PORT;
+}
+
+//#9 run express API server in background to listen for incoming requests
+server.listen(port, () => {
+	console.log("Server running.");
 });
 
 
